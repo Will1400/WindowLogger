@@ -11,7 +11,7 @@ namespace WindowLogger.Logger
     class Program
     {
         public static Repository repository;
-        public static List<string> windowIgnoreNames = new List<string>() { "Reload", "Selected Tab" };
+        public static List<string> namesToIgnore = new List<string>() { "Reload", "Selected Tab" };
 
         static async Task Main(string[] args)
         {
@@ -25,32 +25,40 @@ namespace WindowLogger.Logger
             await Listen();
         }
 
-
         static async Task Listen()
         {
             string lastWindow = "";
-            DateTime detectedDate = default;
+            DateTime detectedDate = DateTime.Now;
+
+            int updateTime = 200;
 
             while (true)
             {
-                await Task.Delay(200);
+                await Task.Delay(updateTime);
                 string window = GetActiveWindowTitle();
-                if (window != null &&  lastWindow != window)
+
+                if (window != null && lastWindow != window)
                 {
-                    if (CheckIfWindowIsIgnored(window) || string.IsNullOrEmpty(window.Split(',').Last()))
+                    if (string.IsNullOrEmpty(window)|| CheckIfWindowIsIgnored(window) || detectedDate == default)
                         continue;
 
-                    LogWindow(lastWindow, detectedDate, DateTime.Now);
+                    LogWindow(lastWindow, detectedDate, DateTime.Now); // Log old window
+
                     lastWindow = window;
                     detectedDate = DateTime.Now;
 
 #if DEBUG // Logs to console if in Debug mode
                     Console.WriteLine(lastWindow);
 #endif
+                    updateTime = 200; // Reset update time
+                }
+                else
+                {
+                    if (updateTime + 50 <= 500) 
+                        updateTime += 50; // Slow update time
                 }
             }
         }
-
 
         static async void LogWindow(string windowTitle, DateTime gainedFocus, DateTime lostFocus)
         {
@@ -64,7 +72,7 @@ namespace WindowLogger.Logger
         /// <returns>True if window is ignored, false if not</returns>
         public static bool CheckIfWindowIsIgnored(string windowTitle)
         {
-            if (windowIgnoreNames.Contains(windowTitle))
+            if (namesToIgnore.Contains(windowTitle))
                 return true;
 
             return false;
