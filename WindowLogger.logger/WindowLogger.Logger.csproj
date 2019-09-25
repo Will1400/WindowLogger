@@ -5,10 +5,19 @@
     <TargetFramework>netcoreapp3.0</TargetFramework>
     <ApplicationIcon>Martz90-Hex-Files.ico</ApplicationIcon>
     <StartupObject>WindowLogger.Logger.Program</StartupObject>
+    <PackageId>WindowLogger</PackageId>
+    <Authors>WHK</Authors>
+    <Product>WindowLogger</Product>
+    <RepositoryUrl>https://github.com/Will1400/WindowLogger</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/Will1400/WindowLogger</PackageProjectUrl>
+    <NeutralLanguage>English</NeutralLanguage>
+    <SignAssembly>false</SignAssembly>
+    <AssemblyName>WindowLogger</AssemblyName>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DocumentationFile></DocumentationFile>
+    <Optimize>false</Optimize>
   </PropertyGroup>
 
   <ItemGroup>
